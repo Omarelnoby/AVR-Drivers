@@ -1,0 +1,164 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:mcal *************************************************************/
+/*************************    swc:DIO   ************************************************************/
+
+#include "bit_math.h"
+#include "std_types.h"
+#include "DIO_register.h"
+#include "DIO_interface.h"
+#include "DIO_private.h"
+#include "DIO_config.h"
+
+
+u8 DIO_u8SetPinDirection(u8 Copy_u8Port,u8 Copy_u8Pin,u8 Copy_u8Direction){
+ if(Copy_u8Pin>DIO_u8PIN7)  return 1;
+if(Copy_u8Direction>DIO_u8PINOUTPUT)  return 1;
+switch(Copy_u8Port){
+        case 'DIO_u8PORTA':
+           if(Copy_u8Direction==1)        set_bit(DDRA,Copy_u8Pin);
+           else if(Copy_u8Direction==0)   clear_bit(DDRA,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTB':
+           if(Copy_u8Direction==1)        set_bit(DDRB,Copy_u8Pin);
+           else if(Copy_u8Direction==0)   clear_bit(DDRB,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTC':
+           if(Copy_u8Direction==1)        set_bit(DDRC,Copy_u8Pin);
+           else if(Copy_u8Direction==0)   clear_bit(DDRC,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTD':
+           if(Copy_u8Direction==1)        set_bit(DDRD,Copy_u8Pin);
+           else if(Copy_u8Direction==0)   clear_bit(DDRD,Copy_u8Pin);
+           return 0;
+           break;
+        default:
+           return 1;
+}
+}
+u8 DIO_u8SetPinValue(u8 Copy_u8Port,u8 Copy_u8Pin,u8 Copy_u8Value){
+if(Copy_u8Pin>DIO_u8PIN7)  return 1;
+if(Copy_u8Direction>DIO_u8PINHIGH)  return 1;
+switch(Copy_u8Port){
+        case 'DIO_u8PORTA':
+           if(Copy_u8Value==1)        set_bit(PORTA,Copy_u8Pin);
+           else if(Copy_u8Value==0)   clear_bit(PORTA,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTB':
+           if(Copy_u8Value==1)        set_bit(PORTB,Copy_u8Pin);
+           else if(Copy_u8Value==0)   clear_bit(PORTB,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTC':
+           if(Copy_u8Value==1)        set_bit(PORTC,Copy_u8Pin);
+           else if(Copy_u8Value==0)   clear_bit(PORTC,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTD':
+           if(Copy_u8Value==1)        set_bit(PORTD,Copy_u8Pin);
+           else if(Copy_u8Value==0)   clear_bit(PORTD,Copy_u8Pin);
+           return 0;
+           break;
+        default:
+           return 1;
+}
+}
+u8 DIO_u8SetPortDirection(u8 Copy_u8Port,u8 Copy_u8Direction){
+switch(Copy_u8Port){
+        case 'DIO_u8PORTA':
+           DDRA=Copy_u8Direction;
+           return 0;
+           break;
+        case 'DIO_u8PORTB':
+           DDRB=Copy_u8Direction;
+           return 0;
+           break;
+        case 'DIO_u8PORTC':
+           DDRC=Copy_u8Direction;
+           return 0;
+           break;
+        case 'DIO_u8PORTD':
+           DDRD=Copy_u8Direction;
+           return 0;
+           break;
+        default:
+           return 1;
+}
+}
+u8 DIO_u8SetPortValue(u8 Copy_u8Port,u8 Copy_u8Value){
+switch(Copy_u8Port){
+        case 'DIO_u8PORTA':
+           PORTA=Copy_u8Value;
+           return 0;
+           break;
+        case 'DIO_u8PORTB':
+           PORTB=Copy_u8Value;
+           return 0;
+           break;
+        case 'DIO_u8PORTC':
+           PORTC=Copy_u8Value;
+           return 0;
+           break;
+        case 'DIO_u8PORTD':
+           PORTD=Copy_u8Value;
+           return 0;
+           break;
+        default:
+           return 1;
+}
+}
+u8 DIO_u8GetPinValue(u8 Copy_u8Port,u8 Copy_u8Pin,u8 *Copy_pu8Value){
+if((Copy_u8Pin>DIO_u8PIN7)||(Copy_pu8Value==NULL))  return 1;
+switch(Copy_u8Port){
+        case 'DIO_u8PORTA':
+          *Copy_pu8Value=GET_BIT(PINA,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTB':
+           *Copy_pu8Value=GET_BIT(PINB,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTC':
+           *Copy_pu8Value=GET_BIT(PINC,Copy_u8Pin);
+           return 0;
+           break;
+        case 'DIO_u8PORTD':
+           *Copy_pu8Value=GET_BIT(PIND,Copy_u8Pin);
+           return 0;
+           break;
+        default:
+           return 1;
+}
+}
+u8 DIO_u8GetPortValue(u8 Copy_u8Port,u8 *Copy_pu8Value){
+if(Copy_pu8Value==NULL)  return 1;
+switch(Copy_u8Port){
+        case 'DIO_u8PORTA':
+          *Copy_pu8Value=PINA;
+           return 0;
+           break;
+        case 'DIO_u8PORTB':
+           *Copy_pu8Value=PINB;
+           return 0;
+           break;
+        case 'DIO_u8PORTC':
+           *Copy_pu8Value=PINC;
+           return 0;
+           break;
+        case 'DIO_u8PORTD':
+           *Copy_pu8Value=PIND;
+           return 0;
+           break;
+        default:
+           return 1;
+}
+}
+
+
+
+
