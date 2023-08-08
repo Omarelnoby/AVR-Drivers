@@ -1,0 +1,41 @@
+#define WDTCR  *((volataile u8*)0x41)
+#define WDTCR_WDP0      0               
+#define WDTCR_WDP1      1                      
+#define WDTCR_WDP2      2               
+#define WDTCR_WDE     3               
+#define WDTCR_WDTOE     4               
+  
+
+void WDT_voidDisable(void);
+void WDT_voidEnable(void);
+void WDT_voidSleep(u8 Copy_u8SleepTime);
+
+
+void main (void){
+
+
+
+
+
+}
+void WDT_voidDisable(void){
+/*clearing the fourth 2bits*/
+WDTCR&=0b00011000;
+/*clearing the watch dog*/
+WDTCR=0b00000000;
+}
+
+void WDT_voidEnable(void){
+
+SET_BIT(WDTCR,WDTCR_WDE)
+
+
+}
+
+void WDT_voidSleep(u8 Copy_u8SleepTime){
+/*clearing the first 3bits*/
+WDTCR&=0b11111000;
+/*setting the prescaler*/
+WDTCR|=Copy_u8SleepTime;
+
+}
