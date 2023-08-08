@@ -1,0 +1,25 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:EXTI   ************************************************************/
+
+#ifndef EXTI_INTERFACE_H_
+#define EXTI_INTERFACE_H_
+
+#define INT0       6
+#define INT1       7
+#define INT2       5
+
+
+void EXTI_voidInt0Init(void);
+void EXTI_voidInt1Init(void);
+void EXTI_voidInt2Init(void);
+u8 EXTI_u8DisableInterrupt(u8 Copy_IntNum);
+u8 EXTI_u8EnableInterrupt(u8 Copy_IntNum);
+u8 EXTI_u8Int0SetSenseControl(void);
+u8 EXTI_u8Int1SetSenseControl(void);
+u8 EXTI_u8Int2SetSenseControl(void);
+u8 EXTI_u8Int0SetCallBack(void(*pvCallBack)(void));
+
+#endif 
