@@ -1,0 +1,79 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:UART  ************************************************************/
+
+#ifndef UART_REGISTER_H_
+#define UART_REGISTER_H_
+
+
+#define MCUCR_ISC2    6
+
+
+#define UDR  *((volataile u8*)0x2C)
+
+
+
+#define UCSRA  *((volataile u8*)0x2B)
+#define UCSRA_MPCM        0                  /*multi processor communication mode*/
+#define UCSRA_U2X         1                  /*double the transmission rate mode*/
+#define UCSRA_PE          2                  /*parity error*/
+#define UCSRA_DOR         3                  /*data over run*/
+#define UCSRA_FE          4                  /*frame error*/
+#define UCSRA_UDRE        5                  /*usart data register empty*/
+#define UCSRA_TXC         6                  /*transmission complete*/
+#define UCSRA_RXC         7                  /*recieving complete*/
+
+
+
+
+#define UCSRB  *((volataile u8*)0x2A)
+#define UCSRB_TXB8            0                  /*transmitted data nineth bit*/
+#define UCSRB_RXB8            1                  /*recieved data nineth bit*/
+#define UCSRB_UCSZ2           2                  /*character size bit 2*/
+#define UCSRB_TXEN            3                  /*transmitter enable*/
+#define UCSRB_RXEN            4                  /*reciever enable*/
+#define UCSRB_UDRIE           5                  /*data register empty interrupt enable*/
+#define UCSRB_TXCIE           6                  /*tx complete interrupt enable*/
+#define UCSRB_RXCIE           7                  /*rx complete interrupt enable*/
+
+
+
+
+#define  UBRRL  *((volataile u8*)0x29)
+#define TCCR1A_WGM10      0                  /*wave form generation mode 10*/
+#define TCCR1A_WGM11      1                  /*wave form generation mode 11*/
+#define TCCR1A_FOC1B      2                  /*force output compare for channel B*/
+#define TCCR1A_FOC1A      3                  /*force output compare for channel A*/
+#define TCCR1A_COM1B0     4                  /*compare output mode for channel B bit0*/
+#define TCCR1A_COM1B1     5                  /*compare output mode for channel B bit1*/
+#define TCCR1A_COM1A0     6                  /*compare output mode for channel A bit0*/
+#define TCCR1A_COM1A1     7                  /*compare output mode for channel A bit1*/
+
+
+#define UBBRH  *((volataile u8*)0x40)
+#define UBBRH_MPCM       0                  /*multu*/
+#define TCCR1B_CS11       1                  /*clock select bit 1*/
+#define TCCR1B_CS12       2                  /*clock select bit 2*/
+#define TCCR1B_WGM12      3                  /*wave form generation mode 12*/
+#define TCCR1B_WGM13      4                  /*wave form generation mode 13*/
+#define TCCR1B_ICES1       6                  /* Input Capture Edge Select*/
+#define TCCR1B_ICNC1       7                  /* Input Capture Noise Canceler*/
+
+
+#define UCSRC  *((volataile u8*)0x40)
+#define UCSRB_UCPOL           0                  /*clock parity*/
+#define UCSRB_UCSZ0           1                  /*character size bit 0*/
+#define UCSRB_UCSZ1           2                  /*character size bit 1*/
+#define UCSRB_USBS            3                  /*stop bit select */
+#define UCSRC_UPM0            4                  /*parity mode bit 0*/
+#define UCSRC_UPM1            5                  /*parity mode bit 1*/
+#define UCSRC_UMSEL           6                  /*uart mode select between sync and async*/
+#define UCSRC_URSEL           7                  /*register select*/
+
+
+
+
+
+#endif 

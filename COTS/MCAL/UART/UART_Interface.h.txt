@@ -1,0 +1,24 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:UART   ************************************************************/
+
+#ifndef UART_INTERFACE_H_
+#define UART_INTERFACE_H_
+
+#define ICU_RISING_EDGE         1
+#define ICU_FALLING_EDGE        2
+
+void USART_voidInit(void);
+u8 USART_u8SyncRecieve   (void));
+void USART_voidSyncSend(u8 Copy_u8Data);
+u8 USART_u8AsyncRecieve   (void (*pvCallBackFunc) (void));
+void USART_voidAsyncSend(u8 Copy_u8Data,void (*pvCallBackFunc) (void));
+u8 USART_u8SyncRecieveString   (void));
+void USART_voidSyncSendString(char*str);
+u8 USART_u8AsyncRecieveString   (u16 buffersize,void (*pvCallBackFunc) (void));
+void USART_voidAsyncSend(char*str,void (*pvCallBackFunc) (void));
+
+
+#endif 

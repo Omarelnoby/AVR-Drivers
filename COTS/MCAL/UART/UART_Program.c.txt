@@ -1,0 +1,131 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:UART   ************************************************************/
+
+#include "std_types.h"
+#include "bit_math.h"
+#include "UART_Register.h"
+#include "UART_Interface.h"
+#include "UART_Private.h"
+#include "UART_Config.h"
+static u8 USART_u8GlobalSend=0;
+static u8* USART_u8GlobalRecieve=NULL;
+static void (*USART_pvCallBackFuncRecieveString) (void)=NULL;
+static void (*USART_pvCallBackFuncSendString) (void)=NULL;
+
+
+void USART_voidInit(void){
+u8 Local_u8Ucsrc=0;
+SET_BIT(Local_u8Ucsrc,UCSRC_UCSZ0);
+SET_BIT(Local_u8Ucsrc,UCSRC_UCSZ1);
+SET_BIT(Local_u8Ucsrc,7);
+
+/*set data size*/
+UCSRC=Local_u8Ucsrc;
+CLEAR_BIT(UCSRB,UCSRB_UCSZ2 );
+
+/*SET BAUD RATE TO 9600*/
+UBBR=51;
+
+/*transmitter enable*/
+SET_BIT(UCSRB,UCSRB_TXEN );
+
+/*reciever enable*/
+SET_BIT(UCSRB,UCSRB_RXEN );
+}
+
+void USART_voidSend(u8 Copy_u8Data){
+u8 Local_u8Count=0;
+u8 Local_u8Timeout=50;
+while(((GET_BIT(UCSRA,UCSRA_UDRE))==0)&&(Local_u8Count!=Local_u8Timeout)){
+Local_u8Count++;
+}
+if(Local_u8Count!=Local_u8Timeout){
+UDR=Copy_u8Data;
+}
+}
+
+u8 USART_u8Recieve (void)){
+while(((GET_BIT(UCSRA,UCSRA_RXC))==0)&&(Local_u8Count!=Local_u8Timeout)){
+Local_u8Count++;
+}
+if(Local_u8Count!=Local_u8Timeout){
+return UDR;
+}
+else {
+return 0;
+}
+}
+
+
+u8 USART_u8AsyncRecieve   (u8*Copy_u8reciever){
+USART_u8GlobalRecieve=Copy_u8reciever;
+/*reciever interrupt enable*/
+SET_BIT(UCSRB,UCSRB_RXCIE );
+}
+
+
+void USART_voidAsyncSend(u8 Copy_u8Data){
+USART_u8GlobalSend=Copy_u8Data;
+
+/*transmitter interrupt enable*/
+SET_BIT(UCSRB,UCSRB_TXCIE );
+}
+
+char* USART_u8SyncRecieveString   (u16 copy_u16BufferSize)){
+char*str=NULL;
+for(int i=0;i<copy_u16BufferSize;i++){
+while((GET_BIT(UCSRA,UCSRA_UDRE))==0);
+*str[i]=UDR
+}
+return str;
+
+}
+void USART_voidSyncSendString(const char*str){
+while(*str!=/0){
+while((GET_BIT(UCSRA,UCSRA_UDRE))==0);
+UDR=*str;
+str++
+}
+}
+
+u8 USART_u8AsyncRecieveString   (u16 buffersize,void (*pvCallBackFunc) (void)){
+
+}
+
+void USART_voidAsyncSendString(char*str,void (*pvCallBackFunc) (void)){
+/*copy local pointer to func to a global one to be executed in the isr*/
+USART_pvCallBackFuncSendChar=pvCallBackFunc;
+/*load udr with transmitted value*/
+UDR=Copy_u8Data;
+/*transmitter interrupt enable*/
+SET_BIT(UCSRB,UCSRB_TXCIE );
+}
+void __vector_13 (void) __attribute__((signal));/*recieving interrupt complete*/
+void __vector_13 (void){
+if(USART_pvCallBackFuncRecieveString!=NULL){ 
+ USART_pvCallBackFuncRecieveString();
+/*disable interrupt*/
+Clear_BIT(UCSRB,UCSRB_RXCIE );
+} 
+else{
+*USART_u8GlobalRecieve=UDR;
+}
+}
+
+
+void __vector_15 (void) __attribute__((signal));/*transmiting interrupt complete*/
+void __vector_15 (void){
+
+if(USART_pvCallBackFuncSendString!=NULL){ 
+ USART_pvCallBackFuncSendString();
+} 
+else{
+UDR=USART_u8GlobalSend;aaasw
+}
+}
+
+
+
