@@ -1,0 +1,59 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:ADC   ************************************************************/
+
+#ifndef ADC_CONFIG_H_
+#define ADC_CONFIG_H_
+#define ADC_REFERENCE_VOLTAGE       AVCC
+/*options
+              1-AVCC
+              2-AREF
+              3-2.54 V
+             
+                             */
+
+
+#define ADC_PRESCALER  128 
+/*options
+              2
+              4
+              8
+              16 
+              32
+              64
+              128
+                             */
+#define ADC_u32TIMEOUT      50000
+
+#define ADC_TRIGGER_MODE  AUTO_TRIGGER
+/*options
+              1-AUTO_TRIGGER
+              2-POLLING
+             
+                             */
+
+#define AUTO_TRIGGER_SOURCE  FREE RUNNING
+/*options
+              1-FREE RUNNING 
+              2-ANALOG COMPARATOR
+              3-EXTERNAL INTERRUPT
+              4-TIMER/COUNTER0 COMPARE
+              5-TIMER/COUNTER1 COMPARE
+              6-TIMER/COUNTER0 OVERFLOW
+              7-TIMER/COUNTER1 OVERFLOW
+
+                                      */
+#define      LEFT_RIGHT_ADJ  LEFT_ADJ
+/*options
+              1-LEFT_ADJ
+              2-RIGHT_ADJ
+             
+                             */
+
+
+
+
+
+#endif 
