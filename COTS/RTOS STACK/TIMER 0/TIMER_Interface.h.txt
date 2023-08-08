@@ -1,0 +1,28 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:RTOS stack *************************************************************/
+/*************************    swc:TIMER0   ************************************************************/
+
+#ifndef TIMER_INTERFACE_H_
+#define TIMER_INTERFACE_H_
+
+#define ICU_RISING_EDGE         1
+#define ICU_FALLING_EDGE        2
+
+void TIMER0_voidInit(void);
+u8 TIMER0_u8SetCallBack(void(*CopypvCallBackFunc)(void));
+void TIMER0_voidSetPreLoadValue(u8 Copy_u8PreLoadValue);
+void TIMER0_voidSetChannelACompMatch(u16*Copy_u16CompMatch);
+
+
+
+void TIMER1_voidInit(void);
+void TIMER1_voidSetChannelACompMatch(u16*Copy_u16CompMatch);
+u8 TIMER1_u8SetCallBack(void(*CopypvCallBackFunc)(void));
+void TIMER1_voidSetPreLoadValue(u8 Copy_u8PreLoadValue);
+
+
+
+u8 TIMER_u8SetCallBack(void(*CopypvCallBackFunc[])(void)); 
+#endif 
