@@ -1,0 +1,217 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:ADC   ************************************************************/
+
+#include "std_types.h"
+#include "bit_math.h"
+#include "ADC_Register.h"
+#include "ADC_Interface.h"
+#include "ADC_Private.h"
+#include "ADC_Config.h"
+static void (*ADC_pvcallbackNotificationFunc)(void)=NULL;
+static u16*ADC_Pu16Reading=NULL;
+u8 ADC_u8BusyState=BUSY;
+static u8*ADC_pu8ChannelArray=NULL;
+static u16*ADC_pu16ResultArray=NULL;
+static u8 ADC_u8Size;
+static u8 ADC_u8ChainConvIndex=0;
+static u8 ADC_u8IsrSource=0;
+
+void ADC_voidInit(void){
+/* AVCC AS REFERENCE VOLTAGE*/
+SET_BIT(ADMUX,ADMUX_REFS0);
+CLEAR_BIT(ADMUX,ADMUX_REFS1);
+
+/*ACTIVATE LEFT_RIGHT ADJUST RESULT*/
+#if (LEFT_RIGHT_ADJ==LEFT_ADJ)
+SET_BIT(ADMUX,ADMUX_ADLAR);
+#else 
+CLEAR_BIT(ADMUX,ADMUX_ADLAR);
+#endif
+/*SET ADC PRESCALER TO 128*/
+
+SET_BIT(ADCSRA,ADCSRA_ADPS2);
+SET_BIT(ADCSRA,ADCSRA_ADPS1);
+SET_BIT(ADCSRA,ADCSRA_ADPS0);
+
+}
+u8 ADC_u8GetChannelReadingSync(u8 Copy_u8Channel,u16*Copy_Pu16Reading){
+u8 Local_u8ErrorState==OK;
+u32 Local_u32Counter==0;
+if(ADC_u8BusyState==IDLE){
+/*clear mux bits in admux register*/
+ADMUX &=0b11100000;
+/*make adc busy*/
+ADC_u8BusyState=BUSY;
+/*ENABLE ADC*/
+SET_BIT(ADCSRA,ADCSRA_ADEN);
+
+/*set the required channel into the admux register*/
+
+ADMUX |=Copy_u8Channel;
+/*polling busy waiting until the adc flag is high*/
+#if (ADC_TRIGGER_MODE==POLLING)
+/*enable start conversion*/
+SET_BIT(ADCSRA,ADCSRA_ADSC);
+while(((GET_BIT(ADCSRA,ADCSRA_ADIF))==0)&&(Local_u32Counter!=ADC_u32TIMEOUT)){
+Local_u32Counter++;
+}
+if(Local_u32Counter==ADC_u32TIMEOUT){
+Local_u8ErrorState==NOK;
+
+}  
+else{
+/*clear adc flag*/
+CLEAR_BIT(ADCSRA,ADCSRA_ADIF);
+*Copy_Pu16Reading=ADCH;
+ADC_u8BusyState=IDLE;
+} 
+Local_u32Counter==0;
+
+#endif
+#if (ADC_NUMBER_OF_BITES==8)
+  *Copy_Pu16Reading==ADCH;
+#elif (ADC_NUMBER_OF_BITES==10)
+  *Copy_Pu16Reading==ADC_VALUE; 
+#endif
+}
+else{
+Local_u8ErrorState=NOK FUNC;
+}
+
+
+
+return Local_u8ErrorState;
+
+}
+u8 ADC_u8GetChannelReadingAsync(u8 Copy_u8Channel,u16*Copy_Pu16Reading,void (*Copy_pvNotificationFunc)(void)){
+
+u8 Local_u8ErrorState==OK;
+if(ADC_u8BusyState==IDLE){
+if((Copy_Pu16Reading==NULL)||(Copy_pvNotificationFunc==NULL)){ 
+Local_u8ErrorState==NOK;
+}
+else{
+ADC_pvcallbackNotificationFunc=Copy_pvNotificationFunc;
+ADC_Pu16Reading=Copy_Pu16Reading;
+
+/*make adc busy*/
+ADC_u8BusyState=BUSY;
+/*set state to single channel*/
+ADC_u8IsrSource=SingleChannelAsync;
+/*clear mux bits in admux register*/
+ADMUX &=0b11100000;
+
+/*set the required channel into the admux register*/
+ADMUX |=Copy_u8Channel;
+
+/*ADC START CONV*/
+SET_BIT(ADCSRA,ADCSRA_ADSC);
+
+/*set the INTERRUPT ENABLE*/
+SET_BIT(ADCSRA,ADCSRA_ADIE);
+
+}
+}
+else{
+Local_u8ErrorState=NOK FUNC;
+}
+return Local_u8ErrorState;
+
+
+}
+void __vector_16 (void) __attribute__((signal));
+void __vector_16 (void){
+/*loading the adch to the location that global [pointer refers to*/
+*ADC_Pu16Reading=ADCH;
+/*make adc ideal*/
+ADC_u8BusyState=IDLE
+;
+/*calling the notification function*/
+ADC_pvcallbackNotificationFunc();
+/*disable adc iterrupt*/
+CLEAR_BIT(ADCSRA,ADCSRA_ADIE);
+
+}
+u8 ADC_u8GetChainAsync(Chain_t*Copy_Chain){
+u8 Local_u8ErrorState=OK;
+if(Copy_Chain==NULL){
+Local_u8ErrorState=NULL;
+}
+else{
+if(ADC_u8BusyState==BUSY){
+Local_u8ErrorState=NOK;
+}
+else{
+ ADC_u8BusyState=BUSY;
+/*set state to chain channel*/
+ADC_u8IsrSource=ChainAsync;
+
+ADC_pu8ChannelArray=Copy_Chain->channel;
+ADC_pu16ResultArray=Copy_Chain->result;
+ADC_u8Size=Copy_Chain->size;
+ADC_pvcallbackNotificationFunc=Copy_Chain->NotificationFunc;
+ADC_u8ChainConvIndex=0;
+
+/*clear mux bits in admux register*/
+ADMUX &=0b11100000;
+
+/*set the required channel into the admux register*/
+ADMUX |=ADC_pu8ChannelArray[ADC_u8ChainConvIndex];
+
+/*ADC START CONV*/
+SET_BIT(ADCSRA,ADCSRA_ADSC);
+
+/*set the INTERRUPT ENABLE*/
+SET_BIT(ADCSRA,ADCSRA_ADIE);
+
+}
+}
+
+
+
+
+
+
+
+return Local_u8ErrorState;
+}
+void __vector_16 (void) __attribute__((signal));
+void __vector_16 (void){
+if(ADC_u8IsrSource==SingleChannelAsync){
+/*loading the adch to the location that global [pointer refers to*/
+*ADC_Pu16Reading=ADCH;
+/*make adc ideal*/
+ADC_u8BusyState=IDLE
+;
+/*calling the notification function*/
+ADC_pvcallbackNotificationFunc();
+/*disable adc iterrupt*/
+CLEAR_BIT(ADCSRA,ADCSRA_ADIE);
+}
+else if(ADC_u8IsrSource==ChainAsync){/*isr source is chain*/
+/*loading the adch to the location that global [pointer refers to*/
+ADC_pu16ResultArray[ADC_u8ChainConvIndex]=ADCH;
+ADC_u8ChainConvIndex++;
+if(ADC_u8ChainConvIndex==ADC_u8Size){/*chain finished */
+/*make adc ideal*/
+ADC_u8BusyState=IDLE;
+/*calling the notification function*/
+ADC_pvcallbackNotificationFunc();
+/*disable adc iterrupt*/
+CLEAR_BIT(ADCSRA,ADCSRA_ADIE);
+}
+else{/*chain is not finished*/
+/*clear mux bits in admux register*/
+ADMUX &=0b11100000;
+
+/*set the required channel into the admux register*/
+ADMUX |=ADC_pu8ChannelArray[ADC_u8ChainConvIndex];
+
+/*ADC START CONV*/
+SET_BIT(ADCSRA,ADCSRA_ADSC);
+}
+}
+}

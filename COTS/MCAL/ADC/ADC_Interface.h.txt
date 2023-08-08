@@ -1,0 +1,26 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:ADC   ************************************************************/
+
+#ifndef ADC_INTERFACE_H_
+#define ADC_INTERFACE_H_
+
+
+
+
+void ADC_voidInit(void);
+u8 ADC_u8GetChannelReading(u8 Copy_u8Channel);
+void EXTI_voidInt2Init(void);
+typedef struct{
+u8 *Channel;
+u16* result;
+u8 size;
+void (*NotificationFunc)(void);
+
+}Chain_t;
+u8 ADC_u8GetChainAsync(Chain_t*Copy_Chain);
+
+
+#endif 
