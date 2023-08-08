@@ -1,0 +1,28 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:TWI   ************************************************************/
+
+#ifndef TWI_INTERFACE_H_
+#define TWI_INTERFACE_H_
+
+typedef enum{
+
+
+}TWI_ErrState;
+void TWI_voidMasterInit (u8 Copy_u8SlaveAddress);
+void TWI_voidSlaveInit (u8 Copy_u8SlaveAddress);
+TWI_ErrState TWI_SendStartCondition(void);
+TWI_ErrState TWI_SendRepeatedStart(void);
+TWI_ErrState TWI_SendSlaveAddressWithWrite(u8 Copy_u8SlaveAddress);
+TWI_ErrState TWI_SendSlaveAddressWithRead(u8 Copy_u8SlaveAddress);
+TWI_ErrState TWI_MasterSendData(u8 Copy_u8DataByte);
+TWI_ErrState TWI_MasterReadData(u8 *Copy_pu8DataByte);
+void TWI_voidSendStopCondition(void);
+
+
+
+
+
+#endif 
