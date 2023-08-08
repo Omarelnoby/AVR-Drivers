@@ -1,0 +1,176 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:TIMER   ************************************************************/
+
+#include "std_types.h"
+#include "bit_math.h"
+#include "TIMER_Register.h"
+#include "TIMER_Interface.h"
+#include "TIMER_Private.h"
+#include "TIMER_Config.h"
+
+         /*Global pointers to functions to hold the address of the call back functions*/
+static void(*TIMER0_pvOverFlowCallBackFunc)(void)=NULL;
+static void(*TIMER0_pvOutputCompareCallBackFunc)(void)=NULL;
+static void(*ICU_pvCallBackFunc)(void)=NULL;
+void TIMER0_voidInit(void){
+/*choose ctc mode*/
+CLEAR_BIT(TCCR0,TCCR0_WGM00);
+SET_BIT(TCCR0,TCCR0_WGM01);
+/*choose fast pwm mode*/
+SET_BIT(TCCR0,TCCR0_WGM00);
+SET_BIT(TCCR0,TCCR0_WGM01);
+/*clear compare match set on top*/
+CLEAR_BIT(TCCR0,TCCR0_COM00);
+SET_BIT(TCCR0,TCCR0_COM01);
+
+/*output compare interrupt enable */
+SET_BIT(TIMSK,TIMSK_OCIE0);
+/*set compare match value to 250*/
+OCR0=250;
+/*prescaler division by 8*/
+CLEAR_BIT(TCCR0,TCCR0_CS00);
+SET_BIT(TCCR0,TCCR0_CS01);
+CLEAR_BIT(TCCR0,TCCR0_CS02);
+
+}
+void TIMER0_voidSetCompareValue(u8 Copy_u8Value){
+OCR0=Copy_u8Value;
+}
+u8 TIMER0_u8SetCallBack(void(*CopypvCallBackFunc)(void)){
+u8 Local_u8ErrorState==OK;
+if(CopypvCallBackFunc!=NULL){ 
+TIMER0_pvCallBackFunc=CopypvCallBackFunc;
+}
+else{
+Local_u8ErrorState==NULL;
+}
+return Local_u8ErrorState;
+}
+
+void __vector_10 (void) __attribute__((signal));
+void __vector_10 (void){
+if(TIMER0_pvCallBackFunc!=NULL){ 
+ TIMER0_pvCallBackFunc();
+} 
+}
+void TIMER1_voidInit(void){
+
+/*setting timer 1 in non inverting mode */
+CLEAR_BIT(TCCR1A,TCCR1A_COM1A0);
+SET_BIT(TCCR1A,TCCR1A_COM1A1);
+
+/*setting timer 1 in fast pwm mode with ICR register */
+CLEAR_BIT(TCCR1A,TCCR1A_WGM10);
+SET_BIT(TCCR1A,TCCR1A_WGM11);
+SET_BIT(TCCR1B,TCCR1B_WGM12); 
+SET_BIT(TCCR1B,TCCR1B_WGM13);
+
+/* set prescaler to divided by 8*/
+CLEAR_BIT(TCCR1B,TCCR1B_CS10);
+SET_BIT(TCCR1B,TCCR1B_CS11);
+CLEAR_BIT(TCCR1B,TCCR1B_CS12);
+
+}
+void TIMER1_voidSetICR(u16 Copy_u16Top){
+ICR1=Copy_u16Top;
+}
+void TIMER1_voidSetChannelACompMatch(u16 Copy_u16CompMatch){
+OCR1A=Copy_u16CompMatch;
+}
+
+
+
+                                                 /*ICU functions*/
+void ICU_voidInit(void){
+/*set trigger source to rising edge*/
+SET_BIT(TCCR1B,TCCR1B_ICES1);
+/*enable icu interrupt*/
+SET_BIT(TIMSK,TIMSK_TICIE1);
+}
+
+u8 ICU_u8SetTriggerEdge(u8 Copy_u8TriggerEdge){
+u8 Local_u8ErrorState=0;
+if(Copy_u8TriggerEdge==ICU_RISING_EDGE){
+/*set trigger source to rising edge*/
+SET_BIT(TCCR1B,TCCR1B_ICES1);
+}
+else if(Copy_u8TriggerEdge==ICU_FALLING_EDGE){
+/*set trigger source to falling edge*/
+CLEAR_BIT(TCCR1B,TCCR1B_ICES1);
+}
+else{
+Local_u8ErrorState=1;
+}
+return Local_u8ErrorState;
+}
+
+u8 ICU_u8SetCallBack(void(*CopypvCallBackFunc)(void)){
+u8 Local_u8ErrorState==OK;
+if(CopypvCallBackFunc!=NULL){ 
+ICU_pvCallBackFunc=CopypvCallBackFunc;
+}
+else{
+Local_u8ErrorState==NULL;
+}
+return Local_u8ErrorState;
+}
+
+u16 ICU_u16ReadIcrRegister(void){
+u16 Local_u16ReadIcr=ICR;
+return Local_u16ReadIcr;
+}
+
+void ICU_voidDisableInterrupt(void){
+CLEAR_BIT(TIMSK,TIMSK_TICIE1);
+}
+
+void __vector_6 (void) __attribute__((signal));
+void __vector_6 (void){
+if(ICU_pvCallBackFunc!=NULL){ 
+ ICU_pvCallBackFunc();
+} 
+}
+
+                         /*fuction to be passed to the isr of the icu to be executed to calculate the period and duty cycle*/
+void ICU_Hardware (void){
+static u16 Reading1,Reading2,Reading3;
+static u8 Local_u8Counter=0;
+Local_u8Counter++;
+if(Local_u8Counter==1){
+Reading1=ICU_u16ReadingInputCapture();
+}
+else if(Local_u8Counter==2){
+Reading2=ICU_u16ReadingInputCapture();
+PeriodTicks=Reading2-Reading1;
+u8 ICU_u8SetTriggerEdge(ICU_FALLING_EDGE)
+}
+else if(Local_u8Counter==3){
+OnTicks=Reading3-Reading2;
+ICU_voidDisableInterrupt();
+
+}
+}
+
+                                /*fuction to be passed to the isr of the icu to be executed to calculate the period and duty cycle*/
+void ICU_Software (void){
+static u16 Reading1,Reading2,Reading3;
+static u8 Local_u8Counter=0;
+Local_u8Counter++;
+if(Local_u8Counter==1){
+TIMER1_voidSetTimer1Value(0);
+}
+else if(Local_u8Counter==2){
+
+PeriodTicks=TIMER1_u16ReadTimer1Value;
+
+ EXTI_u8Int0SetSenseControl(FALLING_EDGE)
+}
+else if(Local_u8Counter==3){
+OnTicks=TIMER1_u16ReadTimer1Value;
+OnTicks-=PeriodTicks;
+EXTI_u8DisableInterrupt(INT0);
+}
+}

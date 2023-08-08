@@ -1,0 +1,67 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:TIMER   ************************************************************/
+
+#ifndef TIMER_REGISTER_H_
+#define TIMER_REGISTER_H_
+
+
+
+#define TCCR0  *((volataile u8*)0x53)
+#define TCCR0_WGM00    6                  /*wave form generation mode 00*/
+#define TCCR0_WGM01    3                  /*wave form generation mode 01*/
+#define TCCR0_CS00     0                  /*clock select bit0*/
+#define TCCR0_CS01     1                  /*clock select bit1*/
+#define TCCR0_CS02     2                  /*clock select bit2*/
+#define TCCR0_COM01     5                  /*compare match bit1*/
+#define TCCR0_COM00     4                  /*compare match bit0*/
+
+#define OCR0  *((volataile u8*)0x5C)
+
+#define OCR1AL  *((volataile u8*)0x4A)
+
+#define OCR1AH  *((volataile u8*)0x4B)
+
+#define TIMSK  *((volataile u8*)0x59)
+#define TIMSK_TOIE0      0               (timer 0 over flow interrupt enable)
+#define TIMSK_OCIE0      1               (timer 0 output compare interrupt enable)             
+#define TIMSK_TOIE1      2               (timer 1 over flow interrupt enable)
+#define TIMSK_OCIE1B     3               (timer 1 output compare interrupt enable)
+#define TIMSK_OCIE1A     4               (timer 1 output compare interrupt enable)
+#define TIMSK_TICIE1     5               ( input capture interrupt)
+#define TIMSK_TOIE2      6               (timer 2 over flow interrupt enable)
+#define TIMSK_OCIE2      7               (timer 2 output compare interrupt enable)
+
+
+
+#define MCUCSR *((volataile u8*)0x54)
+#define MCUCR_ISC2    6
+/*for timer 1*/
+
+#define TCCR1A  *((volataile u8*)0x4F)
+#define TCCR1A_WGM10      0                  /*wave form generation mode 10*/
+#define TCCR1A_WGM11      1                  /*wave form generation mode 11*/
+#define TCCR1A_FOC1B      2                  /*force output compare for channel B*/
+#define TCCR1A_FOC1A      3                  /*force output compare for channel A*/
+#define TCCR1A_COM1B0     4                  /*compare output mode for channel B bit0*/
+#define TCCR1A_COM1B1     5                  /*compare output mode for channel B bit1*/
+#define TCCR1A_COM1A0     6                  /*compare output mode for channel A bit0*/
+#define TCCR1A_COM1A1     7                  /*compare output mode for channel A bit1*/
+
+
+#define TCCR1B  *((volataile u8*)0x4E)
+#define TCCR1B_CS10       0                  /*clock select bit 0*/
+#define TCCR1B_CS11       1                  /*clock select bit 1*/
+#define TCCR1B_CS12       2                  /*clock select bit 2*/
+#define TCCR1B_WGM12      3                  /*wave form generation mode 12*/
+#define TCCR1B_WGM13      4                  /*wave form generation mode 13*/
+#define TCCR1B_ICES1       6                  /* Input Capture Edge Select*/
+#define TCCR1B_ICNC1       7                  /* Input Capture Noise Canceler*/
+
+#define ICR1L  *((volataile u8*)0x46)
+
+#define ICR  *((volataile u16*)0x46)
+#define ICR1H  *((volataile u8*)0x47)
+#endif 

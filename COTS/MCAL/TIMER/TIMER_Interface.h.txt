@@ -1,0 +1,28 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:TIMER   ************************************************************/
+
+#ifndef TIMER_INTERFACE_H_
+#define TIMER_INTERFACE_H_
+
+#define ICU_RISING_EDGE         1
+#define ICU_FALLING_EDGE        2
+
+void TIMER0_voidInit(void);
+u8 TIMER0_u8SetCallBack(void(*CopypvCallBackFunc)(void));
+void TIMER0_voidSetPreLoadValue(u8 Copy_u8PreLoadValue);
+
+
+void TIMER1_voidInit(void);
+void TIMER1_voidSetChannelACompMatch(u16*Copy_u16CompMatch);
+void TIMER1_voidSetICR(u16*Copy_u16Top);
+
+void ICU_voidInit(void);
+u8 ICU_u8SetTriggerEdge(u8 Copy_u8TriggerEdge);
+u16 ICU_u16ReadIcrRegister(void);
+void ICU_voidInterruptDisable(void);
+
+u8 TIMER_u8SetCallBack(void(*CopypvCallBackFunc[])(void)); 
+#endif 
