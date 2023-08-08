@@ -1,0 +1,47 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:SPI  ************************************************************/
+
+#ifndef SPI_REGISTER_H_
+#define SPI_REGISTER_H_
+
+
+
+#define SPDR  *((volataile u8*)0x2F)
+
+
+
+#define SPCR  *((volataile u8*)0x2D)
+#define SPCR_SPR0          0                  /*clock rate bit 0*/
+#define SPCR_SPR1          1                  /*clock rate bit 1*/
+#define SPCR_CPHA          2                  /*clock phase*/
+#define SPCR_CPOL          3                  /*clock polarity*/
+#define SPCR_MSTR          4                  /*master slave select*/
+#define SPCR_DORD          5                  /*spi data order*/
+#define SPCR_SPE          6                  /*spi enable*/
+#define SPCR_SPIE          7                  /*spi interrupt enable*/
+
+
+
+
+#define SPSR  *((volataile u8*)0x2E)
+#define SPSR_SPI2X            0                  /*double spi speed rate*/
+#define UCSRB_RXB8            1                  /*reserved bit*/
+#define UCSRB_UCSZ2           2                  /*reserved bit*/
+#define UCSRB_TXIE            3                  /*reserved bit*/
+#define UCSRB_RXIE            4                  /*reserved bit*/
+#define UCSRB_UDRIE           5                  /*reserved bit*/
+#define SPSR_WCOL             6                  /*write collision flag*/
+#define SPSR_SPIF             7                  /*spi interrupt flag*/
+
+
+
+
+
+
+
+
+
+#endif 

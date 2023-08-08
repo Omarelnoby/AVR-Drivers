@@ -1,0 +1,39 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:MCAL *************************************************************/
+/*************************    swc:SPI   ************************************************************/
+
+#include "std_types.h"
+#include "bit_math.h"
+#include "SPI_Register.h"
+#include "SPI_Interface.h"
+#include "SPI_Private.h"
+#include "SPI_Config.h"
+
+
+void SPI_voidMasterInit (void){
+/*master select*/
+SET_BIT(SPCR,SPCR_MSTR);
+/*spi enable*/
+SET_BIT(SPCR,SPCR_SPE);
+/*set speed of spi*/
+SET_BIT(SPCR,SPCR_SPR0);
+CLEAR_BIT(SPCR,SPCR_SPR1);
+}
+
+void SPI_voidSlaveInit (void){
+/*slave select*/
+CLEAR_BIT(SPCR,SPCR_MSTR);
+/*spi enable*/
+SET_BIT(SPCR,SPCR_SPE);
+}
+
+u8 SPI_voidTrancieve(u8 Copy_u8Data){
+/*send data*/
+SPDR=Copy_u8Data;
+/*busy waiting until the transmission is complete*/
+while((GET_BIT(SPSR,SPSR_SPIF))==0);
+return SPDR;
+}
+
