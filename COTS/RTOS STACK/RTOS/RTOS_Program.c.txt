@@ -1,0 +1,81 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+[/*************************  layer:MCAL *************************************************************/
+/*************************    swc:TWI  ************************************************************/
+
+#include "std_types.h"
+#include "bit_math.h"
+#include "TIMER_Interface.h"
+#include "GIE_Interface.h"
+#include "RTOS_Interface.h"
+#include "RTOS_Private.h"
+#include "RTOS_Config.h"
+
+Task_t System_Tasks[TASK_NUM]={{NULL}};
+
+
+void RTOS_voidStart (void){
+u8 TIMER0_u8SetCallBack(&voidScheduler);
+void GIE_voidEnable();
+void TIMER0_voidInit();
+}
+
+
+u8 RTOS_u8CreateTask (u8 Copy_u8Priority,u16 Copy_u16Periodicity,void(*Copy_pvTaskFunc)(void),u16 Copy_u16FirstDelay){
+u8 Local_u8ErrorState=OK;
+if(System_Tasks[Copy_u8Priority].TaskFunc==NULL){
+System_Tasks[Copy_u8Priority].Periodicity=Copy_u16Periodicity;
+System_Tasks[Copy_u8Priority].TaskFunc=Copy_pvTaskFunc;
+System_Tasks[Copy_u8Priority].TaskState=TASK_RESUMED;
+System_Tasks[Copy_u8Priority].FirstDelay=Copy_u16FirstDelay;
+}
+else{
+Local_u8ErrorState=NOK;
+}
+return Local_u8ErrorState;
+
+}
+
+
+static void voidScheduler (void){
+static u16 Local_u16CounterTicks=0;
+u8 Local_u8CounterTasks;
+Local_u16CounterTicks++;
+
+ for(Local_u8CounterTasks=0;Local_u8CounterTasks<TASK_NUM;Local_u8CounterTasks++){
+    if(System_Tasks[Local_u8CounterTasks].TaskState==TASK_RESUMED){
+
+
+       if((System_Tasks[Local_u8CounterTasks].FirstDelay)==0){
+
+            if(System_Tasks[Local_u8CounterTasks].TaskFunc!=NULL){
+             System_Tasks[Local_u8CounterTasks].TaskFunc();
+              System_Tasks[Local_u8CounterTasks].FirstDelay=System_Tasks[Local_u8CounterTasks].Periodicity-1;
+            }
+       }
+       else{
+        System_Tasks[Local_u8CounterTasks].FirstDelay--;  
+       }
+
+
+    }
+    else{}
+    
+    }
+}
+
+
+void RTOS_voidSuspendTask (u8 Copy_u8Priority){
+System_Tasks[Copy_u8Priority].TaskState=TASK_SUSPENDED;
+}
+
+
+
+void RTOS_voidResumeTask (u8 Copy_u8Priority){
+System_Tasks[Copy_u8Priority].TaskState=TASK_RESUMED;
+}
+
+void RTOS_voidDeleteTask (u8 Copy_u8Priority){
+System_Tasks[Copy_u8Priority].TaskFunc=NULL;
+}
