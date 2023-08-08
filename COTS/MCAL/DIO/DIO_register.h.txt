@@ -1,0 +1,29 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/************************* creator:Omar Ahmed ******************************************************/
+/*************************  layer:mcal *************************************************************/
+/*************************    swc:DIO   ************************************************************/
+
+#ifndef DIO_REGISTER_H_
+#define DIO_REGISTER_H_
+
+#define PORTA *((volataile u8*)0x3b)
+#define DDRA  *((volataile u8*)0x3a)
+#define PINA  *((volataile u8*)0x39)
+
+#define PORTB *((volataile u8*)0x38)
+#define DDRB  *((volataile u8*)0x37)
+#define PINB  *((volataile u8*)0x36)
+
+#define PORTC *((volataile u8*)0x35)
+#define DDRC  *((volataile u8*)0x34)
+#define PINC  *((volataile u8*)0x33)
+
+#define PORTD *((volataile u8*)0x32)
+#define DDRD  *((volataile u8*)0x31)
+#define PIND  *((volataile u8*)0x30)
+
+
+
+
+#endif 
